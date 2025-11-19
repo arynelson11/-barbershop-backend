@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  passwordHash  String?
+  role          Role
+  phone         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  barberProfile Barber?
+  appointments  Appointment[] @relation("ClientAppointments")
+  barberAppointments Appointment[] @relation("BarberAppointments")
+}
+
+model Barber {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  bio       String?
+  color     String?
+}
+
+model Service {
+  id              String   @id @default(uuid())
+  name            String
+  durationMinutes Int
+  priceCents      Int
+  description     String?
+  appointments    Appointment[]
+}
+
+model Appointment {
+  id         String   @id @default(uuid())
+  client     User     @relation("ClientAppointments", fields: [clientId], references: [id])
+  clientId   String
+  barber     User     @relation("BarberAppointments", fields: [barberId], references: [id])
+  barberId   String
+  service    Service  @relation(fields: [serviceId], references: [id])
+  serviceId  String
+  startAt    DateTime
+  endAt      DateTime
+  status     AppointmentStatus
+  priceCents Int
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  admin
+  barber
+  client
+}
+
+enum AppointmentStatus {
+  scheduled
+  confirmed
+  completed
+  cancelled
+}
