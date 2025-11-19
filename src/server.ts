@@ -7,6 +7,7 @@ import barberRoutes from './routes/barberRoutes';
 import appointmentRoutes from './routes/appointmentRoutes';
 import aiRoutes from './routes/aiRoutes';
 import seedRoutes from './routes/seedRoutes';
+import migrateRoutes from './routes/migrateRoutes';
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -31,6 +32,7 @@ app.use('/api/barbers', barberRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/seed', seedRoutes);
+app.use('/api/migrate', migrateRoutes);
 
 // Rota 404
 app.use((req, res) => {
@@ -53,6 +55,8 @@ app.listen(PORT, () => {
   console.log(`📅 Appointments: http://localhost:${PORT}/api/appointments`);
   console.log(`🤖 AI: http://localhost:${PORT}/api/ai`);
   console.log(`🌱 Seed: http://localhost:${PORT}/api/seed` );
+  console.log(`🔄 Migrate: http://localhost:${PORT}/api/migrate` );
+
 });
 
 export default app;
